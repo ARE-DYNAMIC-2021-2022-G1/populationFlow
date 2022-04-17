@@ -1,9 +1,7 @@
-# Bibliothèque des fonctions utilisées dans notre modele.
-
 # La fonction initialisation crée les données utilisées pour la simulation (pays, individus) ainsi que des historiques
 
 def initialisation(nb_pays, nb_individus, nb_annees):
-    pays =      {i:[random.random(), random.random(), 20] for i in range(nb_pays)}
+    pays =      {i:[random.random(), random.random(), 100] for i in range(nb_pays)}
     individus = {i:[random.random(), random.random(), -1] for i in range(nb_individus)}
 
     historique_pays =      {i:[] for i in range(nb_pays)}
@@ -31,7 +29,7 @@ def repartition_annuelle(pays, individus):
 
 def changement_pays(pays):
     for k in pays.keys():
-        pays[k][2] = 20;
+        pays[k][2] = 100;
         f = random.random()
         if f < 0.5:
             pays[k][0] = pays[k][0]*0.75 + 0.25*random.random()
@@ -46,9 +44,12 @@ def changement_individus(individus):
             individus[k][0] = individus[k][0]*0.75 + 0.25*random.random()
             individus[k][1] = individus[k][1]*0.75 + 0.25*random.random()
             
+# Historique_pays -> Pays : [Niveau de vie pays, Stabilité politique, nombre d'habitants]   
+# Historique_individus -> Individu : [Pays de séjour la première année, pays de séjour la deuxième année, ...] 
+            
 def mise_a_jour_historique(pays, individus, historique_pays, historique_individus):
     for k1 in historique_pays.keys():
-        historique_pays[k1].append([pays[k1][0], pays[k1][1], 20-pays[k1][2]])
+        historique_pays[k1].append([pays[k1][0], pays[k1][1], 100-pays[k1][2]])
         
     for k2 in historique_individus.keys():
         historique_individus[k2].append(individus[k2][2])
@@ -57,6 +58,7 @@ def mise_a_jour_historique(pays, individus, historique_pays, historique_individu
 
 def migration(data, nb_annees):
     for i in range(nb_annees):
+        print("Année #", i+1)
         plt.figure()
         repartition_annuelle(data[0], data[1])
         mise_a_jour_historique(data[0], data[1], data[2], data[3])
@@ -64,7 +66,4 @@ def migration(data, nb_annees):
         plt.show()
         changement_pays(data[0])
         changement_individus(data[1])
-
-
-
-        
+    
